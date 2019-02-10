@@ -29,46 +29,53 @@ var lang = [
 	}
 ]
 
-let symbol;
+// перебор всего массива на предмет элементов со свойством language 
 
-let index;
+let chooseLangMessage = ''
 
-let i;
+lang.forEach(function(elem, i){
+	const langName = elem.language
+	chooseLangMessage += ` ${i+1} - ${langName}` 
+})
 
-var chooseLang = prompt(`Select the language: ${lang[0].language}, ${lang[1].language}, ${lang[2].language}`);
 
-switch (chooseLang) {
+const findSymbol = function(symbolChoice) {
+	const userSymbolChoice  = prompt('Choise keyboard symbol');
 
-	case '1':
-		symbol = prompt(`Choose some`);
-	break;
+	const keyboard = lang[symbolChoice].keyboard;
 
-	case '2':
-		symbol = prompt(`Впиши символ`);
-	break;
+	const keyBoardKeys = Object.keys(keyboard); // собираем ключи объекта
 
-	case '3': 
-		symbol = prompt(`Будь що`)
-	}
+	let answer = 'Not found...'
 
-function find (lang, symbol) {
+	// засовываем ключи в массив
 
-	for (var i = 0; i < lang.length; i++) {
+	Array.from(keyBoardKeys, function(keyRow) {
+		const keyBoardRow = keyboard[keyRow]
 
-		const obj = lang[i];
+		const symbolPosition = keyBoardRow.indexOf(userSymbolChoice)
 
-		const keyboard = obj.keyboard;
+		if(symbolPosition !== -1) {
+			answer = `Your symbol is in row ${keyRow} on position ${symbolPosition+1}`
+		}
 
-		const keys = Object.keys(keyboard);
+	})
 
-		keys.forEach((key, i) => {
-			const string = keyboard[key];
+	alert(answer);
+}
 
-			index = string.indexOf(symbol);
-		});
+const langChoiсe = function () {
+	var chooseLang = prompt(`Select the language: ${chooseLangMessage}`);
 
-		alert(`${index} - ${i}`) 
+	if(isNaN(chooseLang)) {
+		alert('Enter the number');
+		langChoiсe()
+	} else if (chooseLang < 0 || chooseLang > lang.length) {
+		alert('Wrong choise, try again')
+		langChoiсe()
+	} else {
+		findSymbol(chooseLang-1) 
 	}
 }
 
-find (lang, symbol)
+langChoiсe()
